@@ -1,13 +1,10 @@
 {
-  "name": "minimal-mistakes-theme",
-  "author": "Michael Rose <michael@mademistakes.com>",
-  "homepage": "http://mmistakes.github.io/minima-mistakes/",
+  "name": "cory-taylor-personal",
+  "author": "Cory Taylor <cory.c.taylor@gmail.com>",
+  "homepage": "http://www.corytaylor.ca",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mmistakes/minimal-mistakes.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mmistakes/minimal-mistakes/issues"
+    "url": "git://github.com/coryt/coryt.github.io.git"
   },
   "engines": {
     "node": ">= 0.10.0"

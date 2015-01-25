@@ -1,7 +1,7 @@
 # Site wide configuration
 
-title:            Site Title
-locale:           en_US
+title:            
+locale:           en_CA
 url:              
 
 
@@ -26,24 +26,24 @@ kramdown:
 
 # Site owner
 owner:
-  name: Your Name
-  avatar: bio-photo.jpg
-  bio: "Describe your self."
-  email: 
+  name: Cory Taylor
+  avatar: Cory.jpg
+  bio: #"Describe your self."
+  email: cory.c.taylor@gmail.com
   disqus-shortname: 
-  twitter: #username
-  facebook: #username
+  twitter: cctaylor
+  facebook: #coryctaylor
   google:
-    plus: #username
+    plus: corytaylor1
     analytics: 
     verify: 
     ad-client: 
     ad-slot: 
   bing-verify: 
-  github: #username
-  stackoverflow: #http://stackoverflow.com/users/123456/username
-  linkedin: #username
-  instagram: #username
+  github: coryt
+  stackoverflow: 136763/coryt
+  linkedin: coryctaylor
+  instagram: cctaylor
   lastfm: #username
   tumblr: #username
   pinterest: #username
