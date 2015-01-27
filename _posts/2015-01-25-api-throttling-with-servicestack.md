@@ -116,7 +116,7 @@ private void CheckIfRequestShouldBeThrottled(IRequest request, IResponse respons
 }
 {% endhighlight %}
 
-##Determing if we should Throttle
+##Determining if we should throttle
 The benefit of using a script directly on the redis server is that we can reduce the number of roundtrips we need to make. Everything can be done in one call to redis. Above you'll note we are passing into the script the key of ```ip:operation``` followed by four arguments (3 limits and a timestamp). The last argument is the timestamp, which we remove from the table and assign to ts. Next we loop over the lesser of the number of arguments or the number of durations. We build up our bucket key which we call ```INCR``` on and set it's expiry to the duration window of 60sec, 3600sec or 86400sec. This ensures the bucket will expire at the end of this period or we'll keep incrementing the counter until we hit the limit.
 
 {% highlight lua linenos %}
