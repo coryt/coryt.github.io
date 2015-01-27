@@ -8,13 +8,14 @@ share: false
 comments: true
 ---
 
-Today I'd like to show a little plugin I wrote to enable throttling on any of my api endpoints. ServiceStack is my framework of choice and we use it at Kobo to serve up our client APIs. If you aren't already familiar with ServiceStack, head on over and check it out[^1]. I couldn't be happier with ServiceStack, it's an incredibly fast and flexible framework and currently meets all of our needs. So let's jump right in. 
+Today I’d like to show a little plugin I wrote to enable throttling on any of my api endpoints. ServiceStack is my framework of choice and we use it at Kobo to serve up our client APIs. If you aren’t already familiar with ServiceStack, head on over and check it out[^1]. I couldn’t be happier with ServiceStack, it’s an incredibly fast and flexible framework and currently meets all of our needs. So let’s jump right in.
 
 ##So Why Throttle Clients?
-There may be many business-driven reasons why one would want to add throttling to an api. In a lot of cases, throttling is intented to prevent abuse of an API whether that abuse is intentional or not, it's always a good idea to ensure your apis are protected and meet your defined SLAs. Other cases maybe to control costs, limit an attack vector, think an attacker brute forcing an authentication endpoint, and so on.
+There may be many business-driven reasons why one would want to add throttling to an api. In a lot of cases, throttling is intended to prevent abuse of an api whether that abuse is intentional or not, it’s always a good idea to ensure your apis are protected and meet your defined SLAs. Other cases might be to control costs, to limit an attack vector (e.g., an attacker brute forcing an authentication endpoint) and so on.
 
 ##What can be Throttled?
 ProgrammableWeb[^2] had a good summary of the many ways companies are limiting their apis and it's not just request per ip over a specific time period. A few examples are:
+
 * Time based limits: 1 call per second
 * Call volume by IP: 5,000 queries per IP per day
 * Call volume per-application: 10,000 queries per application per day
@@ -24,7 +25,7 @@ ProgrammableWeb[^2] had a good summary of the many ways companies are limiting t
 So with that, our goal for this post is to easily enable specific ServiceStack endpoints to monitor and throttle requests by clients at per minute, per hour or per day intervals.
 
 ##Annotating our API Endpoints
-In order to let our plugin know which endpoints we want to throttle, we need a way to specificly mark each ServiceStack Operation. We'll do that with the ThrottleInfoAttribute[^5] class and example usage below.
+In order to let our plugin know which endpoints we want to throttle, we need a way to specifically mark each ServiceStack Operation. We'll do that with the ThrottleInfoAttribute[^5] class and example usage below.
 
 {% highlight c# linenos %}
 public class ThrottleInfoAttribute : Attribute
@@ -82,7 +83,7 @@ _redisClient.RemoveAllLuaScripts();
 _scriptSha = _redisClient.LoadLuaScript(ReadLuaScriptResource("rate_limit.lua"));
 {% endhighlight %}
 
-Next is our function ```CheckIfRequestShouldBeThrottled``` which is called on every request. We can do a quick lookup to see if our request type has throttling info which, if it does, build up a key of RemoteIp and OperationName. This will be used to create buckets based on the time internal configured for this Operation. We'll touch more on this shortly. Then we actually need to call into redis, using the sha we received earlier to the cached lua script, the key and the throttling information for the given Operation being called. Our script returns 1 if we should throttle the request or null if we shouldn't, so check the result, and if we are supposed to throttle this request, set the status to 429 with a description that the client has been throttled.
+Next is our function ```CheckIfRequestShouldBeThrottled``` which is called on every request. We can do a quick lookup to see if our request type has throttling info which, if it does, build up a key of RemoteIp and OperationName. This will be used to create buckets based on the time interval configured for this Operation. We'll touch more on this shortly. Then we actually need to call into redis, using the sha we received earlier to the cached lua script, the key and the throttling information for the given Operation being called. Our script returns 1 if we should throttle the request or null if we shouldn't, so check the result, and if we are supposed to throttle this request, set the status to 429 with a description that the client has been throttled.
 
 {% highlight c# linenos %}
 private void CheckIfRequestShouldBeThrottled(IRequest request, IResponse response, object requestDto)
